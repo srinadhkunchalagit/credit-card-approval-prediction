@@ -1,0 +1,62 @@
+{
+  "accuracy": 0.6437,
+  "precision": 0.6546,
+  "recall": 0.6124,
+  "f1_score": 0.6328,
+  "roc_auc": 0.6914,
+  "confusion_matrix": [
+    [
+      1010,
+      486
+    ],
+    [
+      583,
+      921
+    ]
+  ],
+  "n_train": 12000,
+  "n_test": 3000,
+  "model_type": "RandomForestClassifier",
+  "top_features": [
+    {
+      "feature": "AMT_INCOME_TOTAL",
+      "importance": 0.3691
+    },
+    {
+      "feature": "AGE_YEARS",
+      "importance": 0.1133
+    },
+    {
+      "feature": "YEARS_EMPLOYED",
+      "importance": 0.0843
+    },
+    {
+      "feature": "CNT_FAM_MEMBERS",
+      "importance": 0.0341
+    },
+    {
+      "feature": "CNT_CHILDREN",
+      "importance": 0.026
+    },
+    {
+      "feature": "NAME_FAMILY_STATUS_Married",
+      "importance": 0.0142
+    },
+    {
+      "feature": "FLAG_PHONE",
+      "importance": 0.0142
+    },
+    {
+      "feature": "NAME_EDUCATION_TYPE_Higher education",
+      "importance": 0.0138
+    },
+    {
+      "feature": "FLAG_WORK_PHONE",
+      "importance": 0.0131
+    },
+    {
+      "feature": "CODE_GENDER_M",
+      "importance": 0.013
+    }
+  ]
+}

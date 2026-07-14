@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ledger — Credit Approval Estimator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+  <div class="grain"></div>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <div class="brand">
+        <span class="brand-mark">§</span>
+        <span class="brand-name">Ledger</span>
+      </div>
+      <nav class="site-nav">
+        <a href="#estimator">Estimator</a>
+        <a href="#dashboard">Model file</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <div class="hero-text">
+        <p class="eyebrow">Applicant Risk Estimator · v1.0</p>
+        <h1>Will the card<br>say <em>yes</em>?</h1>
+        <p class="hero-sub">
+          Enter an applicant's profile and a Random Forest model — trained on
+          income, employment history, housing and family structure — returns
+          a live approval likelihood, the same way an underwriting model
+          reads a file before a human ever does.
+        </p>
+        <a href="#estimator" class="btn btn-primary">Run an estimate ↓</a>
+      </div>
+
+      <div class="hero-card-stage">
+        <div class="credit-card" id="creditCard">
+          <div class="card-face">
+            <div class="card-row-top">
+              <span class="card-issuer">LEDGER</span>
+              <span class="card-chip" aria-hidden="true"></span>
+            </div>
+            <div class="card-number" id="cardNumber">•••• •••• •••• ••••</div>
+            <div class="card-row-bottom">
+              <div>
+                <div class="card-label">applicant</div>
+                <div class="card-value" id="cardName">— — — —</div>
+              </div>
+              <div>
+                <div class="card-label">status</div>
+                <div class="card-value" id="cardStatus">awaiting input</div>
+              </div>
+            </div>
+            <div class="card-meter" aria-hidden="true">
+              <div class="card-meter-fill" id="cardMeterFill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="estimator" class="estimator wrap">
+      <div class="section-heading">
+        <p class="eyebrow">01 · Applicant file</p>
+        <h2>Fill the ledger</h2>
+      </div>
+
+      <form id="predictForm" class="ledger-form">
+        <div class="form-grid">
+
+          <fieldset class="field-group">
+            <legend>Identity</legend>
+            <label class="field">
+              <span>Gender</span>
+              <select name="gender" id="gender" required></select>
+            </label>
+            <label class="field">
+              <span>Age (years)</span>
+              <input type="number" name="age" id="age" min="18" max="90" value="34" required>
+            </label>
+            <label class="field">
+              <span>Family status</span>
+              <select name="family_status" id="family_status" required></select>
+            </label>
+            <label class="field">
+              <span>Children</span>
+              <input type="number" name="children" id="children" min="0" max="10" value="0" required>
+            </label>
+            <label class="field">
+              <span>Family members (total)</span>
+              <input type="number" name="family_members" id="family_members" min="1" max="15" value="2" required>
+            </label>
+          </fieldset>
+
+          <fieldset class="field-group">
+            <legend>Livelihood</legend>
+            <label class="field">
+              <span>Income type</span>
+              <select name="income_type" id="income_type" required></select>
+            </label>
+            <label class="field">
+              <span>Occupation</span>
+              <select name="occupation" id="occupation" required></select>
+            </label>
+            <label class="field">
+              <span>Annual income</span>
+              <input type="number" name="income" id="income" min="0" step="1000" value="180000" required>
+            </label>
+            <label class="field">
+              <span>Years employed</span>
+              <input type="number" name="years_employed" id="years_employed" min="0" max="50" step="0.5" value="5"
+                required>
+            </label>
+            <label class="field">
+              <span>Education</span>
+              <select name="education" id="education" required></select>
+            </label>
+          </fieldset>
+
+          <fieldset class="field-group">
+            <legend>Assets &amp; contact</legend>
+            <label class="field">
+              <span>Housing type</span>
+              <select name="housing_type" id="housing_type" required></select>
+            </label>
+            <label class="field toggle-field">
+              <span>Owns a car</span>
+              <select name="own_car" id="own_car">
+                <option value="Y">Yes</option>
+                <option value="N">No</option>
+              </select>
+            </label>
+            <label class="field toggle-field">
+              <span>Owns realty</span>
+              <select name="own_realty" id="own_realty">
+                <option value="Y">Yes</option>
+                <option value="N">No</option>
+              </select>
+            </label>
+            <div class="checkbox-row">
+              <label><input type="checkbox" name="work_phone" id="work_phone"> Work phone on file</label>
+              <label><input type="checkbox" name="phone" id="phone" checked> Phone on file</label>
+              <label><input type="checkbox" name="email" id="email"> Email on file</label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="submitBtn">Stamp the ledger</button>
+          <span class="form-hint" id="formHint">Submit the form to store the applicant record below.</span>
+        </div>
+      </form>
+
+      <div class="result-panel" id="resultPanel" hidden>
+        <div class="result-verdict">
+          <div class="result-label" id="resultLabel">—</div>
+          <div class="result-band" id="resultBand">—</div>
+        </div>
+        <div class="result-bar-track">
+          <div class="result-bar-fill" id="resultBarFill"></div>
+          <div class="result-bar-marker" style="left:50%"></div>
+        </div>
+        <div class="result-scale">
+          <span>0% likely</span>
+          <span id="resultPct">—</span>
+          <span>100% likely</span>
+        </div>
+      </div>
+
+      <div class="submissions-panel">
+        <div class="section-heading">
+          <p class="eyebrow">03 · Ledger history</p>
+          <h2>Stored application stamps</h2>
+        </div>
+        <div class="submission-summary">
+          <span id="totalSubmissions">0 saved applications</span>
+          <span id="approvedCount">0 accepted</span>
+          <span id="rejectedCount">0 declined</span>
+        </div>
+        <div class="submissions-table-wrap">
+          <table class="submissions-table" id="submissionsTable">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Applicant</th>
+                <th>Outcome</th>
+                <th>Score</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="5" class="no-data">No stored submissions yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">Click a row action to load the application back into the form for editing.</p>
+      </div>
+    </section>
+
+    <section id="dashboard" class="dashboard wrap">
+      <div class="section-heading">
+        <p class="eyebrow">02 · Model file</p>
+        <h2>What the model was graded on</h2>
+      </div>
+
+      <div class="metric-grid" id="metricGrid">
+        <div class="metric-card">
+          <div class="metric-value" id="mAccuracy">—</div>
+          <div class="metric-label">Accuracy</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" id="mPrecision">—</div>
+          <div class="metric-label">Precision</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" id="mRecall">—</div>
+          <div class="metric-label">Recall</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" id="mF1">—</div>
+          <div class="metric-label">F1 score</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" id="mAuc">—</div>
+          <div class="metric-label">ROC AUC</div>
+        </div>
+      </div>
+
+      <div class="dashboard-lower">
+        <div class="feature-importance">
+          <h3>Top signals the model relies on</h3>
+          <div id="featureBars" class="feature-bars"></div>
+        </div>
+        <div class="model-notes">
+          <h3>Model file notes</h3>
+          <dl>
+            <dt>Algorithm</dt>
+            <dd id="nAlgo">—</dd>
+            <dt>Training rows</dt>
+            <dd id="nTrain">—</dd>
+            <dt>Held-out test rows</dt>
+            <dd id="nTest">—</dd>
+            <dt>Source schema</dt>
+            <dd>Kaggle "Credit Card Approval Prediction" (application_record + credit_record fields)</dd>
+          </dl>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>Ledger — a credit approval estimator built with Python, scikit-learn and Flask.</span>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>
