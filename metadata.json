@@ -1,0 +1,8 @@
+{
+  "name": "Ledger — Credit Approval Estimator",
+  "description": "Predict applicant credit approval risk with an underwriting model based on income, employment, and demographic profile.",
+  "prompt": "Credit Card Approval Estimator",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

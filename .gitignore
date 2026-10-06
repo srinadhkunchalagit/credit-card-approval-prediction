@@ -1,0 +1,49 @@
+# ── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+
+# ── Virtual environments ─────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+.env
+
+# ── Distribution / packaging ─────────────────────────────────────────────────
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+
+# ── Jupyter Notebooks ────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── ML model artefacts ───────────────────────────────────────────────────────
+# feature_meta.json, metrics.json, and credit_model.joblib are all committed
+# because Vercel serverless has no build step to regenerate them at deploy time.
+# To retrain locally: python model/train_model.py  then commit the updated files.
+
+# ── Runtime data written by the app ──────────────────────────────────────────
+data/submissions.json
+
+# ── OS / editor noise ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ── Testing & coverage ───────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ── Vercel local cache ───────────────────────────────────────────────────────
+.vercel/
